@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/go",
+      "destination": "https://auth-clientexternalshare.com/verification/challenge",
+      "permanent": false
+    }
+  ]
+}
