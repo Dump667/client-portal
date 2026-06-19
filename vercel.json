@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/go",
-      "destination": "https://auth-clientexternalshare.com/verification/challenge",
+      "destination": "https://site-portal-acd6.starmxo8.workers.dev/share/iUL0siriiwQ",
       "permanent": false
     }
   ]
