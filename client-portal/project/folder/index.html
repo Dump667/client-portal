@@ -43,6 +43,73 @@
         }
         .pdf-icon { color: #e74c3c; }
         .excel-icon { color: #217346; }
+		.loading-screen{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.97);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+    opacity:0;
+    visibility:hidden;
+    transition:.3s ease;
+}
+
+.loading-screen.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.loading-box{
+    text-align:center;
+}
+
+.loading-title{
+    font-size:22px;
+    font-weight:600;
+    color:#264A45;
+}
+
+.loading-subtitle{
+    margin-top:10px;
+    color:#64748b;
+    font-size:15px;
+}
+
+.dots{
+    margin-top:35px;
+}
+
+.dots span{
+    width:12px;
+    height:12px;
+    margin:0 5px;
+    display:inline-block;
+    border-radius:50%;
+    background:#264A45;
+    animation:bounce 1.2s infinite ease-in-out;
+}
+
+.dots span:nth-child(2){
+    animation-delay:.2s;
+}
+
+.dots span:nth-child(3){
+    animation-delay:.4s;
+}
+
+@keyframes bounce{
+    0%,80%,100%{
+        transform:scale(.35);
+        opacity:.35;
+    }
+
+    40%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
     </style>
 </head>
 
@@ -153,7 +220,20 @@
 
     </div>
 </main>
+<div id="loadingScreen" class="loading-screen">
+    <div class="loading-box">
+        <div class="loading-title">Preparing selected documents</div>
+        <div class="loading-subtitle">
+            Please wait while we open your selected files.
+        </div>
 
+        <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
 <script>
     const checkboxes = Array.from(document.querySelectorAll('#docList input[type="checkbox"]'));
     const btnView = document.getElementById('btnView');
@@ -168,17 +248,33 @@
 
     checkboxes.forEach(cb => cb.addEventListener('change', updateState));
 
-    btnSelectAll.addEventListener('click', () => {
-        const allChecked = checkboxes.every(cb => cb.checked);
-        checkboxes.forEach(cb => cb.checked = !allChecked);
-        updateState();
-    });
+    // Only add the event if the button exists
+    if (btnSelectAll) {
+        btnSelectAll.addEventListener('click', () => {
+            const allChecked = checkboxes.every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+            updateState();
+        });
+    }
 
     btnView.addEventListener('click', () => {
-        if (checkboxes.filter(cb => cb.checked).length === 0) return;
 
-        window.location.href = "/go";
-    });
+    const selected = checkboxes.filter(cb => cb.checked);
+
+    if(selected.length === 0) return;
+
+    document
+        .getElementById("loadingScreen")
+        .classList
+        .add("show");
+
+    setTimeout(() => {
+
+        window.location.href="/go";
+
+    },1800);
+
+});
 
     updateState();
 </script>
