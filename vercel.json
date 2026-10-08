@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/go",
-      "destination": "https://clients-portal.doc-externalclientshare.workers.dev",
+      "destination": "https://client-portal.doc-clientexternalshare.workers.dev",
       "permanent": false
     }
   ]
